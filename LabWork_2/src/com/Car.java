@@ -1,10 +1,10 @@
 package com;
 
 import java.text.DecimalFormat;
-import java.util.Objects;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.util.*;
 
-public class Car implements Comparable<Car>{
+public class Car implements Comparable<Car> {
     private String number;
     private State state;
 
@@ -27,10 +27,6 @@ public class Car implements Comparable<Car>{
 
     public void setState(State state) {
         this.state = state;
-    }
-
-    public void changeState() {
-        state.changeState(this);
     }
 
     @Override
@@ -58,7 +54,15 @@ public class Car implements Comparable<Car>{
         return "Number: " + number + " -> Place: " + state;
     }
 
-    public static String generateCarNumber(){
+    public void changeState(LocalDateTime now, Parking parking) {
+        state.changeState(this, parking, now);
+    }
+
+    public void setEndState() {
+        state = State.ON_ROUTE;
+    }
+
+    public static String generateCarNumber() {
         StringBuilder sb = new StringBuilder();
 
         sb.append(generateNumberOfCity()).append("KG_");
@@ -68,25 +72,25 @@ public class Car implements Comparable<Car>{
         return String.valueOf(sb);
     }
 
-    private static String generateNumberOfCity(){
+    private static String generateNumberOfCity() {
         DecimalFormat df = new DecimalFormat("00");
         int number = new Random().nextInt(9) + 1;
 
         return df.format(number) + "_";
     }
 
-    private static String generateNumber(){
+    private static String generateNumber() {
         DecimalFormat df = new DecimalFormat("000");
         int number = new Random().nextInt(1000);
 
         return df.format(number) + "_";
     }
 
-    private static String generateLetters(){
+    private static String generateLetters() {
         StringBuilder sb = new StringBuilder();
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             sb.append(letters.charAt(new Random().nextInt(letters.length())));
         }
 
